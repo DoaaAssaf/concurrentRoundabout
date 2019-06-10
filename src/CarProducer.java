@@ -6,24 +6,29 @@ import java.util.concurrent.ThreadLocalRandom;
 class CarProducer implements Runnable {
     int carsNumber;
     ConcurrentLinkedQueue<Car> queue;
-    String streetname;
-    String[] exits={"ex1","ex2","ex3","ex4"};
-    String[] models={"toyota","audi","BMW","KIA","mercides","ford","hunda"};
+    int streetname;
+    int[] exits={2,4,6,8};
+    String[] models={"toyota","audi","BMW","KIA","mercedes","ford","CHEVROLET","FERRARI","MAZDA",
+    "NISSAN","SEAT","VOLVO","LAND ROVER","JEEP","LAMBORGHINI","BENTLEY","PORSCHE"};
+    String[] size={"mini","small","medium","large","truck"};
 
-    CarProducer(ConcurrentLinkedQueue<Car> queue,int carsNumber,String streetname){
+
+    CarProducer(ConcurrentLinkedQueue<Car> queue,int carsNumber,int streetname){
         this.queue = queue;
         this.carsNumber=carsNumber;
         this.streetname= streetname;
+
     }
     public void run() {
-        System.out.println("car Producer Started on the road ("+streetname+")");
+        int entranceNumber=streetname/2+1;
+        System.out.println("street ("+entranceNumber+") entrance is initialized successfully ...");
         try {
             for (int i = 1; i < carsNumber; i++) {
-                Car car=new Car(this.getRandom(models),ThreadLocalRandom.current().nextInt(10000, 32000 + 1), this.getRandom(exits));
+                Car car=new Car(this.getRandom(models),ThreadLocalRandom.current().nextInt(10000, 32000 + 1), this.getRandomDestination(exits),this.getRandom(size));
                 queue.add(car);
 
-                System.out.println("new car arrived to the road("+streetname+"): number" + car.getNumber()+" dest is "+car.getDest());
-                Thread.currentThread().sleep(ThreadLocalRandom.current().nextInt(200, 10000 + 1));
+                System.out.println("new car arrived to the road("+entranceNumber+"): number " + car.getNumber()+" Model "+car.model+" Size "+car.size+" destination is ex"+car.getDest()/2);
+                Thread.currentThread().sleep(ThreadLocalRandom.current().nextInt(10000, 20000 + 1));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -33,6 +38,12 @@ class CarProducer implements Runnable {
 
 
     public String getRandom(String[] array) {
+        int rnd = new Random().nextInt(array.length);
+        return array[rnd];
+    }
+
+
+    public int getRandomDestination(int[] array) {
         int rnd = new Random().nextInt(array.length);
         return array[rnd];
     }
