@@ -27,7 +27,7 @@ public class Roundabout  implements Runnable {
             Car temp;
             int n;
             try {
-                Thread.currentThread().sleep(15000);
+                Thread.currentThread().sleep(9000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

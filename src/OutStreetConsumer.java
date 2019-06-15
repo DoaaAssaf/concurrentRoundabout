@@ -9,13 +9,14 @@ class OutStreetConsumer implements Runnable {
     ConcurrentLinkedQueue<Car> queue;
     int streetname;
     Roundabout roundabout;
+    TrafficLight trafficLight;
 
-    OutStreetConsumer(ConcurrentLinkedQueue<Car> queue, int streetname,Roundabout roundabout){
+    OutStreetConsumer(ConcurrentLinkedQueue<Car> queue, int streetname,Roundabout roundabout,TrafficLight trafficLight){
         this.queue = queue;
         this.carsNumber =carsNumber;
         this.streetname= streetname;
         this.roundabout=roundabout;
-
+        this.trafficLight=trafficLight;
     }
     public void run() {
         System.out.println("street exit ("+streetname/2+") exit is initialized successfully... ");
@@ -23,11 +24,14 @@ class OutStreetConsumer implements Runnable {
                 try {
                     Thread.currentThread().sleep(2000);
                     if (roundabout.roundarray[streetname-1] != null) {
-                        if (roundabout.roundarray[streetname - 1].getDest() == streetname) {
+                        if ((roundabout.roundarray[streetname - 1].getDest() == streetname)&&(queue.size()<=5)) {
                             System.out.println("car number (" + roundabout.roundarray[streetname - 1].getNumber() + ") reached its destination on the ex" + streetname/2 );
                             queue.add(roundabout.roundarray[streetname - 1]);
                             roundabout.roundarray[streetname - 1] = null;
                         }
+                    }
+                    if(!trafficLight.color.equals("red")){
+                        queue.poll();
                     }
                     } catch(Exception ex){
                         ex.printStackTrace();
